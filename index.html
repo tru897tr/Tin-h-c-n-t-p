@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trắc Nghiệm Tin Học 10 – Ôn Tập Cuối Kì 2</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #1c2128;
+    --border: #30363d;
+    --blue: #58a6ff;
+    --blue2: #1f6feb;
+    --green: #3fb950;
+    --green2: #1a7f37;
+    --red: #f85149;
+    --red2: #8d1a1a;
+    --yellow: #e3b341;
+    --purple: #bc8cff;
+    --text: #e6edf3;
+    --muted: #7d8590;
+    --card: #21262d;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 14px 70px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+    animation: fadeDown .6s ease both;
+  }
+  .header .lang-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(88,166,255,.1); border: 1px solid rgba(88,166,255,.3);
+    color: var(--blue); border-radius: 99px; padding: 4px 14px;
+    font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
+    margin-bottom: 12px; font-family: 'JetBrains Mono', monospace;
+  }
+  .header .lang-badge .dot { width:8px;height:8px;border-radius:50%;background:#3572A5; }
+  .header h1 {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: clamp(1.5rem,4.5vw,2.2rem);
+    font-weight: 700; color: var(--text); line-height: 1.2;
+  }
+  .header h1 span { color: var(--blue); }
+  .header p { color: var(--muted); font-size: .85rem; margin-top: 6px; }
+
+  /* SCOREBOARD */
+  .scoreboard {
+    display: flex; gap: 12px; justify-content: center;
+    margin-bottom: 18px; flex-wrap: wrap;
+    animation: fadeDown .6s .1s ease both;
+  }
+  .sc-box {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 20px; text-align: center; min-width: 90px;
+  }
+  .sc-box .v { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700; line-height: 1; }
+  .sc-box .l { font-size: .65rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-top: 3px; }
+  .sc-box.green .v { color: var(--green); }
+  .sc-box.red   .v { color: var(--red); }
+  .sc-box.blue  .v { color: var(--blue); }
+  .sc-box.yellow .v { color: var(--yellow); }
+
+  /* PROGRESS */
+  .prog-wrap { width: 100%; max-width: 780px; background: var(--bg2); border-radius: 99px; height: 6px; margin-bottom: 7px; overflow: hidden; border: 1px solid var(--border); }
+  .prog-fill { height: 100%; background: linear-gradient(to right, var(--blue2), var(--blue)); border-radius: 99px; transition: width .4s ease; }
+  .prog-lbl { font-family: 'JetBrains Mono', monospace; color: var(--muted); font-size: .75rem; text-align: center; margin-bottom: 20px; }
+
+  /* MAIN CARD */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; max-width: 780px; width: 100%;
+    overflow: hidden; animation: slideUp .4s ease both;
+  }
+  .card-top {
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    padding: 18px 24px 14px; display: flex; align-items: flex-start; gap: 14px;
+  }
+  .q-num-badge {
+    flex-shrink: 0; background: var(--blue2); color: #fff;
+    font-family: 'JetBrains Mono', monospace; font-size: .8rem; font-weight: 700;
+    padding: 4px 10px; border-radius: 6px; margin-top: 2px;
+  }
+  .q-text { font-size: 1rem; line-height: 1.65; font-weight: 500; flex: 1; }
+  .q-text code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg3); border: 1px solid var(--border);
+    padding: 2px 6px; border-radius: 4px; font-size: .88em; color: var(--purple);
+  }
+  .code-block {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 16px; margin-top: 10px;
+    font-size: .83rem; line-height: 1.7; color: #cdd9e5; white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* OPTIONS */
+  .options { padding: 16px 20px; display: flex; flex-direction: column; gap: 9px; }
+  .opt {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--bg2); border: 1.5px solid var(--border);
+    border-radius: 9px; padding: 12px 15px; cursor: pointer;
+    transition: all .15s; text-align: left; width: 100%;
+  }
+  .opt:hover:not(.disabled) { border-color: var(--blue); background: rgba(88,166,255,.06); transform: translateX(3px); }
+  .opt .letter {
+    flex-shrink: 0; width: 26px; height: 26px; border-radius: 6px;
+    background: var(--bg3); border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: .78rem;
+    color: var(--blue); font-weight: 700; transition: all .15s;
+  }
+  .opt .opt-text { font-size: .92rem; line-height: 1.55; color: var(--text); padding-top: 2px; flex: 1; }
+  .opt .opt-text code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg); border: 1px solid var(--border);
+    padding: 1px 5px; border-radius: 4px; font-size: .88em; color: var(--purple);
+  }
+
+  /* States */
+  .opt.correct { border-color: var(--green); background: rgba(63,185,80,.08); }
+  .opt.correct .letter { background: var(--green); border-color: var(--green); color: #fff; }
+  .opt.wrong   { border-color: var(--red); background: rgba(248,81,73,.08); }
+  .opt.wrong   .letter { background: var(--red); border-color: var(--red); color: #fff; }
+  .opt.disabled { cursor: default; }
+
+  /* EXPLAIN */
+  .explain {
+    margin: 0 20px 14px; padding: 11px 14px;
+    background: var(--bg2); border-left: 3px solid;
+    border-radius: 0 7px 7px 0; font-size: .84rem; line-height: 1.6;
+    display: none;
+  }
+  .explain.show { display: block; }
+  .explain.correct-ex { border-color: var(--green); color: #aff5b4; }
+  .explain.wrong-ex   { border-color: var(--red);   color: #ffa198; }
+  .explain code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg); border: 1px solid var(--border);
+    padding: 1px 5px; border-radius: 4px; font-size: .88em; color: var(--purple);
+  }
+
+  /* NAV */
+  .nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 20px 18px; gap: 10px; border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'Be Vietnam Pro', sans-serif; font-size: .88rem; font-weight: 600;
+    padding: 9px 22px; border-radius: 8px; border: none; cursor: pointer; transition: all .15s;
+  }
+  .btn-primary { background: var(--blue2); color: #fff; }
+  .btn-primary:hover { background: #388bfd; }
+  .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+  .btn:disabled { opacity: .35; cursor: not-allowed; }
+
+  /* SHUFFLE TOGGLE */
+  .toolbar {
+    display: flex; gap: 10px; justify-content: center;
+    margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .toggle-btn {
+    font-family: 'Be Vietnam Pro', sans-serif; font-size: .78rem; font-weight: 600;
+    padding: 6px 16px; border-radius: 99px; border: 1.5px solid var(--border);
+    cursor: pointer; background: transparent; color: var(--muted); transition: all .15s;
+  }
+  .toggle-btn.active { border-color: var(--blue); color: var(--blue); background: rgba(88,166,255,.1); }
+
+  /* RESULT */
+  #result-screen {
+    display: none; flex-direction: column; align-items: center;
+    max-width: 780px; width: 100%; animation: slideUp .5s ease both;
+  }
+  .result-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; width: 100%; padding: 44px 36px; text-align: center;
+  }
+  .r-trophy { font-size: 3.5rem; margin-bottom: 14px; animation: bounce .6s .3s ease both; }
+  .r-title { font-size: 1.9rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .r-sub { color: var(--muted); font-size: .9rem; margin-bottom: 28px; }
+  .r-big { font-family: 'JetBrains Mono', monospace; font-size: 5rem; font-weight: 700; color: var(--blue); line-height: 1; }
+  .r-of  { color: var(--muted); font-size: .9rem; margin-bottom: 26px; }
+  .grade { display: inline-block; padding: 8px 24px; border-radius: 99px; font-weight: 700; font-size: .95rem; margin-bottom: 28px; }
+  .grade.A { background: rgba(63,185,80,.15); color: var(--green); border: 1px solid var(--green2); }
+  .grade.B { background: rgba(227,179,65,.12); color: var(--yellow); border: 1px solid rgba(227,179,65,.4); }
+  .grade.C { background: rgba(248,81,73,.12); color: var(--red); border: 1px solid var(--red2); }
+  .r-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; }
+  .rb { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .rb .sv { font-family: 'JetBrains Mono', monospace; font-size: 1.7rem; font-weight: 700; }
+  .rb .sl { font-size: .66rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-top: 3px; }
+  .btn-restart { width: 100%; padding: 13px; border-radius: 10px; border: none; cursor: pointer; background: var(--blue2); color: #fff; font-family: 'Be Vietnam Pro', sans-serif; font-size: .95rem; font-weight: 700; margin-bottom: 10px; transition: background .15s; }
+  .btn-restart:hover { background: #388bfd; }
+  .btn-rv { width: 100%; padding: 11px; border-radius: 10px; border: 1.5px solid var(--border); background: transparent; color: var(--text); font-family: 'Be Vietnam Pro', sans-serif; font-size: .88rem; font-weight: 600; cursor: pointer; transition: all .15s; }
+  .btn-rv:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* REVIEW */
+  .rv-wrap { margin-top: 24px; text-align: left; width: 100%; }
+  .rv-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 15px 18px; margin-bottom: 12px; }
+  .rv-q { font-size: .85rem; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+  .rv-row { display: flex; gap: 8px; align-items: flex-start; font-size: .83rem; line-height: 1.55; padding: 4px 0; }
+  .rv-ok  { color: var(--green); }
+  .rv-no  { color: var(--red); }
+  .rv-ans { color: var(--blue); font-weight: 600; }
+
+  /* CONFETTI */
+  .cf { position:fixed;pointer-events:none;top:0;left:0;width:100%;height:100%;z-index:9999; }
+  .cp { position:absolute;border-radius:2px;animation:fall linear forwards; }
+  @keyframes fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+
+  /* ANIM */
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:none} }
+  @keyframes slideUp  { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:none} }
+  @keyframes bounce   { 0%,100%{transform:scale(1)} 40%{transform:scale(1.25)} 70%{transform:scale(.9)} }
+
+  @media(max-width:500px){
+    .card-top,.options,.nav{padding-left:14px;padding-right:14px;}
+    .r-stats{grid-template-columns:repeat(2,1fr);}
+    .r-big{font-size:3.8rem;}
+    .result-card{padding:32px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="lang-badge"><span class="dot"></span>Python · Tin Học 10</div>
+  <h1>Trắc Nghiệm <span>Ôn Tập</span> Cuối Kì 2</h1>
+  <p>40 câu hỏi · Hàm · Vòng lặp · Xâu · Danh sách</p>
+</div>
+
+<div class="scoreboard">
+  <div class="sc-box green"><div class="v" id="sc-ok">0</div><div class="l">Đúng</div></div>
+  <div class="sc-box red">  <div class="v" id="sc-no">0</div><div class="l">Sai</div></div>
+  <div class="sc-box yellow"><div class="v" id="sc-streak">0</div><div class="l">Chuỗi</div></div>
+  <div class="sc-box blue"> <div class="v" id="sc-rem">—</div><div class="l">Còn lại</div></div>
+</div>
+
+<div class="prog-wrap" style="max-width:780px;width:100%">
+  <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+</div>
+<div class="prog-lbl" id="prog-lbl">Câu 1 / 40</div>
+
+<div class="toolbar">
+  <button class="toggle-btn" id="btn-shuffle" onclick="toggleShuffle()">🔀 Trộn câu hỏi</button>
+  <button class="toggle-btn active" id="btn-explain" onclick="toggleExplain()">💡 Hiện giải thích</button>
+</div>
+
+<div id="quiz-screen" style="width:100%;max-width:780px;display:flex;flex-direction:column;align-items:center">
+  <div class="card" id="main-card">
+    <div class="card-top">
+      <div class="q-num-badge" id="q-badge">#1</div>
+      <div class="q-text" id="q-text"></div>
+    </div>
+    <div class="options" id="options-wrap"></div>
+    <div class="explain" id="explain-box"></div>
+    <div class="nav">
+      <button class="btn btn-ghost" id="btn-prev" onclick="goPrev()">← Trước</button>
+      <button class="btn btn-primary" id="btn-next" onclick="goNext()">Tiếp →</button>
+    </div>
+  </div>
+</div>
+
+<div id="result-screen">
+  <div class="result-card">
+    <div class="r-trophy" id="r-trophy">🏆</div>
+    <div class="r-title" id="r-title">Hoàn thành!</div>
+    <div class="r-sub">Trắc nghiệm Tin Học 10 – 40 câu</div>
+    <div class="r-big" id="r-big">0</div>
+    <div class="r-of" id="r-of">/ 40 câu đúng</div>
+    <div class="grade" id="r-grade"></div>
+    <div class="r-stats">
+      <div class="rb"><div class="sv" id="rs-ok" style="color:var(--green)">0</div><div class="sl">Đúng</div></div>
+      <div class="rb"><div class="sv" id="rs-no" style="color:var(--red)">0</div><div class="sl">Sai</div></div>
+      <div class="rb"><div class="sv" id="rs-pct" style="color:var(--blue)">0%</div><div class="sl">Tỉ lệ</div></div>
+    </div>
+    <button class="btn-restart" onclick="restart()">🔄 Làm lại từ đầu</button>
+    <button class="btn-rv" id="rv-toggle" onclick="toggleReview()">📋 Xem đáp án chi tiết</button>
+    <div class="rv-wrap" id="rv-wrap" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+const RAW = [
+  { q:"Chọn câu lệnh kết nối hàm với thư viện SAI", opts:["import math","import toan_hoc.","import time","from math import gcd"], ans:1, ex:"import toan_hoc. — sai vì tên thư viện không hợp lệ (có dấu chấm ở cuối)" },
+  { q:"Cho đoạn chương trình sau:\nfor i in range(6):\n    print(i)\nTrong đoạn chương trình trên vòng lặp được thực hiện bao nhiêu lần?", opts:["3","6","5","4"], ans:1, ex:"range(6) tạo dãy 0,1,2,3,4,5 → 6 lần lặp" },
+  { q:"Câu lệnh if trong chương trình Python có dạng:", opts:["if <điều kiện>\n<câu lệnh hay nhóm câu lệnh>","if <điều kiện>:\n<câu lệnh hay nhóm câu lệnh>","<điều kiện>:\n<câu lệnh hay nhóm câu lệnh>","if <điều kiện>:"], ans:1, ex:"Cú pháp đúng: if <điều kiện>: (có dấu hai chấm), sau đó thụt đầu dòng" },
+  { q:"Hàm trong Python được khai báo theo mẫu nào?", opts:["def tên_hàm(tham số):\n    Các lệnh mô tả hàm","def tên_hàm(tham số)\n    Các lệnh mô tả hàm","def tên_hàm()\n    Các lệnh mô tả hàm","def (tham số):\n    Các lệnh mô tả hàm"], ans:0, ex:"Cú pháp đúng: def tên_hàm(tham số): — có từ khóa def, tên hàm, dấu hai chấm" },
+  { q:"Trong Python, câu lệnh nào dùng để kết thúc hàm và trả về kết quả cho nơi gọi hàm?", opts:["stop","return","exit","continue"], ans:1, ex:"return dùng để kết thúc hàm và trả về giá trị" },
+  { q:"Hàm gcd(x,y) trả về:", opts:["Căn bậc hai của x và y.","Bội chung nhỏ nhất của x và y.","Ước chung lớn nhất của x và y.","Trị tuyệt đối của x và y."], ans:2, ex:"gcd = Greatest Common Divisor = Ước chung lớn nhất" },
+  { q:"Đâu không phải là hàm trong thư viện math?", opts:["abs(x)","sqrt(x)","exp(x)","print()"], ans:3, ex:"print() là hàm tích hợp sẵn của Python, không thuộc thư viện math" },
+  { q:"Từ khóa dùng để khai báo hàm trong Python là?", opts:["def","procedure","return","function"], ans:0, ex:"def là từ khóa khai báo hàm trong Python" },
+  { q:"Trong Python, với cấu trúc if – else thì <câu lệnh hay nhóm câu lệnh 1> được thực hiện khi:", opts:["Điều kiện bằng 0.","Điều kiện đúng.","Điều kiện sai.","Điều kiện khác 0."], ans:1, ex:"Khối lệnh sau if được thực hiện khi điều kiện đúng (True)" },
+  { q:"Kết quả của đoạn chương trình sau:\nfor i in range(3, 10): print(i)", opts:["in ra màn hình các số từ 3 đến 10","in ra màn hình các số từ 1 đến 10","in ra màn hình các số từ 0 đến 10","in ra màn hình các số từ 3 đến 9"], ans:3, ex:"range(3,10) tạo dãy 3,4,5,6,7,8,9 (không gồm 10)" },
+  { q:"Chọn phát biểu không đúng?", opts:["Phần thân hàm (gồm các lệnh mô tả hàm) phải viết lùi vào theo quy định của Python.","Theo sau tên hàm có thể có hoặc không có các tham số.","Không thể gọi một chương trình con trong Python là một hàm.","Để sử dụng hàm cần khai báo hàm và viết lời gọi thực hiện."], ans:2, ex:"Trong Python, chương trình con chính là hàm (function), hoàn toàn có thể gọi là hàm" },
+  { q:"Chọn phát biểu đúng về thư viện math trong Python:", opts:["Dùng để đọc và ghi dữ liệu","Dùng để làm việc với hệ điều hành","Cung cấp các hàm và hằng số phục vụ tính toán toán học","Dùng để tạo giao diện đồ họa"], ans:2, ex:"Thư viện math cung cấp các hàm toán học như sqrt, sin, cos, gcd, pi, e..." },
+  { q:"Phát biểu nào đúng về vòng lặp while trong Python?", opts:["Lặp một số lần xác định trước","Lặp khi điều kiện còn đúng và dừng khi điều kiện sai","Luôn chạy ít nhất một lần","Chỉ dùng với số nguyên"], ans:1, ex:"while lặp khi điều kiện True, dừng khi điều kiện False" },
+  { q:'Xâu kí tự được đặt trong cặp dấu:', opts:["Nháy đơn ('') hoặc nháy kép (\"\")","Ngoặc đơn ()","Ngoặc vuông []","Ngoặc nhọn {}"], ans:0, ex:"Chuỗi trong Python được đặt trong dấu nháy đơn '' hoặc nháy kép \"\"" },
+  { q:"Hàm len() cho biết:", opts:["Độ dài (hay số kí tự) của xâu.","Chuyển xâu ban đầu thành kí tự in hoa.","Vị trí của kí tự đầu tiên trong xâu.","Vị trí của kí tự bất kì trong xâu."], ans:0, ex:"len() trả về số ký tự (độ dài) của xâu" },
+  { q:"Cho xâu st='123'. Hàm len(st) có giá trị là:", opts:["1","2","3","4"], ans:2, ex:"'123' có 3 ký tự: '1', '2', '3' → len = 3" },
+  { q:"Cho đoạn chương trình sau:\ns1='a'\ns2='b'\nprint(s1+s2)\nKết quả trên màn hình là:", opts:["'a'","'b'","'ab'","'ba'"], ans:2, ex:"s1+s2 = 'a'+'b' = 'ab' (nối chuỗi)" },
+  { q:"Hàm y.count(x) cho biết:", opts:["Vị trí xuất hiện đầu tiên của x trong y.","Vị trí xuất hiện cuối cùng của x trong y.","Cho biết số kí tự của xâu x+y","Đếm số lần xuất hiện không giao nhau của x trong y."], ans:3, ex:"count() đếm số lần chuỗi con x xuất hiện trong y" },
+  { q:"Cho đoạn chương trình sau:\nS1='abcd'\nS2='a'\nprint(S1.count(S2))\nTrên màn hình sẽ xuất hiện giá trị là:", opts:["1","2","3","4"], ans:0, ex:"'abcd'.count('a') = 1 vì 'a' xuất hiện 1 lần trong 'abcd'" },
+  { q:"Xâu rỗng là xâu có độ dài bằng:", opts:["0","1","2","3"], ans:0, ex:"Xâu rỗng '' không có ký tự nào → độ dài = 0" },
+  { q:"Hàm y.replace(x1,x2) có nghĩa là:", opts:["Tạo xâu mới từ xâu y bằng cách thay thế xâu con x2 của y bằng xâu x1.","Tạo xâu mới bằng cách ghép xâu x1 và xâu x2.","Thay thế xâu x1 bằng xâu x1+x2.","Tạo xâu mới từ xâu y bằng cách thay thế xâu con x1 của y bằng xâu x2."], ans:3, ex:"replace(x1, x2): thay tất cả x1 trong y bằng x2" },
+  { q:"Hàm y.find(x) cho biết điều gì?", opts:["Trả về vị trí xuất hiện cuối cùng của xâu x trong xâu y.","Trả về số nguyên xác định vị trí đầu tiên trong xâu y mà từ đó xâu x xuất hiện như một xâu con của xâu y.","Trả về số nguyên xác định vị trí đầu tiên trong xâu x mà từ đó xâu y xuất hiện như một xâu con của xâu x.","Trả về vị trí xuất hiện cuối cùng của xâu y trong xâu x."], ans:1, ex:"find(x): trả về chỉ số đầu tiên mà x xuất hiện trong y, hoặc -1 nếu không tìm thấy" },
+  { q:"Cho đoạn chương trình sau:\ns='abcde'\nprint(s[1:4])\nTrên màn hình máy tính sẽ xuất hiện xâu:", opts:["'abc'","'bcde'","'bcd'","'cde'"], ans:2, ex:"s[1:4] lấy ký tự từ vị trí 1 đến 3 (không gồm 4): b(1), c(2), d(3) → 'bcd'" },
+  { q:"Cho đoạn chương trình sau:\ns='abcde'\nprint(s[3:])\nTrên màn hình máy tính sẽ xuất hiện xâu:", opts:["'de'","'bcde'","'abcd'","'cde'"], ans:0, ex:"s[3:] lấy từ vị trí 3 đến hết: d(3), e(4) → 'de'" },
+  { q:'Xâu "1234%^^%TFRESDRG" có độ dài bằng bao nhiêu?', opts:["16","17","18","15"], ans:0, ex:"Đếm: 1,2,3,4,%,^,^,%,T,F,R,E,S,D,R,G → 16 ký tự" },
+  { q:"Để thêm phần tử vào cuối danh sách ta dùng hàm:", opts:["append()","pop()","clear()","remove()"], ans:0, ex:"append() thêm phần tử vào cuối danh sách" },
+  { q:"Để biết kích thước của danh sách ta dùng hàm:", opts:["type()","len()","sort()","pop()"], ans:1, ex:"len() trả về số phần tử của danh sách" },
+  { q:"Để gọi đến phần tử đầu tiên trong danh sách a ta dùng lệnh:", opts:["a[1]","a[0]","a0","a[]"], ans:1, ex:"Chỉ số bắt đầu từ 0, phần tử đầu tiên là a[0]" },
+  { q:"Cho đoạn chương trình:\na=[1,2,3]\na.append(4)\nprint(a)\nSau khi thực hiện đoạn chương trình trên thì danh sách a có các phần tử:", opts:["a=[4,1,2,3]","a=[1,2,3]","a=[1,2,3,4]","a=[1,4,2,3]"], ans:2, ex:"append(4) thêm 4 vào cuối → [1,2,3,4]" },
+  { q:"Cho đoạn chương trình:\na=[1,2,3]\na.pop(2)\nprint(a)\nSau khi thực hiện đoạn chương trình trên thì danh sách a có các phần tử:", opts:["a=[1,2]","a=[2,3]","a=[1,3]","a=[2]"], ans:0, ex:"pop(2) xóa phần tử tại vị trí 2 (giá trị 3) → [1,2]" },
+  { q:"Cho đoạn chương trình:\na=[1,2,3]\na.insert(0,2)\nprint(a)\nSau khi thực hiện đoạn chương trình trên thì danh sách a có các phần tử:", opts:["a=[0,1,2,3]","a=[2,3]","a=[2,1,2,3]","a=[1,2,3,2]"], ans:2, ex:"insert(0,2): chèn giá trị 2 vào vị trí 0 → [2,1,2,3]" },
+  { q:"Cho đoạn chương trình sau:\na = [1, 3, 5]\nfor i in a:\n    print(i * 2)\nKết quả là gì?", opts:["1 3 5","2 6 10","3 6 9","2 4 6"], ans:1, ex:"1*2=2, 3*2=6, 5*2=10 → in ra 2, 6, 10" },
+  { q:"Cho đoạn chương trình sau:\na=[3,1,5,2]\na.sort()\nprint(a)\nSau khi thực hiện đoạn chương trình trên, danh sách a hiển thị trên màn hình là:", opts:["[1,2,3,5]","[3,1,5,2]","[5,3,2,1]","[3,5,2,1]"], ans:0, ex:"sort() sắp xếp tăng dần → [1,2,3,5]" },
+  { q:"Để khởi tạo danh sách a là một danh sách rỗng ta viết:", opts:["a=''","a=[]","a=[0]","a=\"\""], ans:1, ex:"a=[] tạo danh sách rỗng; a='' và a=\"\" là chuỗi rỗng" },
+  { q:"Cho danh sách a gồm các phần tử [3,4,5]. Khi đó len(a)=?", opts:["1","2","3","4"], ans:2, ex:"Danh sách có 3 phần tử: 3, 4, 5 → len = 3" },
+  { q:"Cho danh sách a=[0,2,4,6]. Phần tử a[1]=?", opts:["0","2","4","6"], ans:1, ex:"a[0]=0, a[1]=2, a[2]=4, a[3]=6 → a[1]=2" },
+  { q:"Cách khởi tạo danh sách sau đây, cách nào sai?", opts:["ls = [1, 2, 3]","ls = [x for x in range(3)]","ls = [int(x) for x in input().split()]","ls = list(3)."], ans:3, ex:"list(3) lỗi vì số nguyên không phải iterable; đúng là list(range(3))" },
+  { q:"Cho đoạn chương trình:\na=[12,10,22,30,15,8]\na.insert(3,19)\nprint(a)\nSau khi thực hiện đoạn chương trình trên thì danh sách a có các phần tử:", opts:["a=[19,12,10,22,30,15,8]","a=[12,10,22,30,15,8,19]","a=[12,19,10,22,30,15,8]","a=[12,10,22,19,30,15,8]"], ans:3, ex:"insert(3,19): chèn 19 vào vị trí 3 → [12,10,22,19,30,15,8]" },
+  { q:"Để khai báo danh sách a và khởi tạo danh sách a có 3 phần tử 10, 20, 30, phương án nào sau đây đúng?", opts:["a = (10,20,30)","a = {10,20,30}","a = [10,20,30]","a = 10,20,30"], ans:2, ex:"Danh sách (list) dùng dấu ngoặc vuông []; () là tuple, {} là set" },
+  { q:"Để sắp xếp danh sách a, phương án nào sau đây đúng?", opts:["reverse(a)","a.reverse()","a.sort()","sort(a)"], ans:2, ex:"a.sort() sắp xếp danh sách tăng dần; reverse() đảo ngược thứ tự" },
+];
+
+const LETTERS = ['A','B','C','D'];
+
+// ===== STATE =====
+let questions = [...RAW];
+let cur = 0;
+let answered = new Array(questions.length).fill(null);
+let score = 0, wrongs = 0, streak = 0;
+let shuffleOn = false, showExplain = true;
+let rvOpen = false;
+
+function toggleShuffle() {
+  shuffleOn = !shuffleOn;
+  document.getElementById('btn-shuffle').classList.toggle('active', shuffleOn);
+  restart(true);
+}
+function toggleExplain() {
+  showExplain = !showExplain;
+  document.getElementById('btn-explain').classList.toggle('active', showExplain);
+  render();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function isCodeLine(text) {
+  return /^\s*(def |for |if |while |print|import|from |a=|a\[|s=|s1|s2|ls |[a-z]+\.[a-z]+\()/i.test(text);
+}
+
+function formatQuestion(text) {
+  const lines = text.split('\n');
+  if (lines.length === 1) return escHtml(text);
+  // First line is prose, rest may be code
+  const prose = escHtml(lines[0]);
+  const codeLines = lines.slice(1);
+  const hasCode = codeLines.some(l => isCodeLine(l));
+  if (hasCode) {
+    return prose + '<div class="code-block">' + escHtml(codeLines.join('\n')) + '</div>';
+  }
+  return lines.map(escHtml).join('<br>');
+}
+
+function formatOpt(text) {
+  const lines = text.split('\n');
+  if (lines.length > 1) {
+    const hasCode = lines.some(l => isCodeLine(l));
+    if (hasCode) return '<span class="code-block" style="margin-top:4px;display:block">' + escHtml(text) + '</span>';
+  }
+  // Inline code-like
+  if (/^[a-z_]+(\(\)|\([^)]*\)|\[.+\]|=[^=])/.test(text.trim())) {
+    return '<code>' + escHtml(text) + '</code>';
+  }
+  return escHtml(text);
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function render() {
+  const q = questions[cur];
+  const total = questions.length;
+  const chosen = answered[cur];
+
+  // progress
+  document.getElementById('prog-fill').style.width = (cur / total * 100) + '%';
+  document.getElementById('prog-lbl').textContent = `Câu ${cur+1} / ${total}`;
+  document.getElementById('sc-rem').textContent = total - cur;
+
+  // question
+  document.getElementById('q-badge').textContent = `#${cur+1}`;
+  document.getElementById('q-text').innerHTML = formatQuestion(q.q);
+
+  // options
+  const wrap = document.getElementById('options-wrap');
+  wrap.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="letter">${LETTERS[i]}</span><span class="opt-text">${formatOpt(opt)}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    if (chosen !== null) {
+      btn.classList.add('disabled');
+      if (i === q.ans) btn.classList.add('correct');
+      else if (i === chosen) btn.classList.add('wrong');
+    }
+    wrap.appendChild(btn);
+  });
+
+  // explain
+  const exBox = document.getElementById('explain-box');
+  if (chosen !== null && showExplain) {
+    exBox.classList.add('show');
+    const isRight = chosen === q.ans;
+    exBox.className = `explain show ${isRight ? 'correct-ex' : 'wrong-ex'}`;
+    exBox.innerHTML = (isRight ? '✓ Chính xác! ' : `✗ Sai! Đáp án: <strong>${LETTERS[q.ans]}</strong>. `) +
+      `💡 <em>${escHtml(q.ex)}</em>`;
+  } else {
+    exBox.className = 'explain';
+  }
+
+  // nav
+  document.getElementById('btn-prev').disabled = cur === 0;
+  const btnNext = document.getElementById('btn-next');
+  btnNext.textContent = cur === total - 1 ? '🏁 Kết quả' : 'Tiếp →';
+  btnNext.disabled = (answered[cur] === null && cur < total - 1);
+  if (cur === total - 1 && answered[cur] !== null) btnNext.disabled = false;
+
+  // card anim
+  const card = document.getElementById('main-card');
+  card.style.animation = 'none'; card.offsetHeight;
+  card.style.animation = 'slideUp .3s ease both';
+}
+
+function selectAnswer(idx) {
+  if (answered[cur] !== null) return;
+  const q = questions[cur];
+  answered[cur] = idx;
+
+  if (idx === q.ans) {
+    score++; streak++;
+    document.getElementById('sc-ok').textContent = score;
+    document.getElementById('sc-streak').textContent = streak;
+  } else {
+    wrongs++; streak = 0;
+    document.getElementById('sc-no').textContent = wrongs;
+    document.getElementById('sc-streak').textContent = 0;
+  }
+
+  render();
+
+  // auto-advance
+  const isLast = cur === questions.length - 1;
+  if (!isLast) setTimeout(() => { if (answered[cur] !== null) goNext(); }, 1200);
+}
+
+function goNext() {
+  if (cur === questions.length - 1) { showResult(); return; }
+  cur++; render();
+}
+function goPrev() { if (cur > 0) { cur--; render(); } }
+
+function showResult() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const rs = document.getElementById('result-screen');
+  rs.style.display = 'flex';
+
+  const total = questions.length;
+  const pct = Math.round(score / total * 100);
+
+  document.getElementById('r-big').textContent = score;
+  document.getElementById('r-of').textContent = `/ ${total} câu đúng`;
+  document.getElementById('rs-ok').textContent = score;
+  document.getElementById('rs-no').textContent = wrongs;
+  document.getElementById('rs-pct').textContent = pct + '%';
+
+  const grade = document.getElementById('r-grade');
+  const trophy = document.getElementById('r-trophy');
+  const title = document.getElementById('r-title');
+
+  if (pct >= 80) {
+    grade.textContent = '🌟 Xuất sắc – ' + pct + '%'; grade.className = 'grade A';
+    trophy.textContent = '🏆'; title.textContent = 'Tuyệt vời!'; launchConfetti();
+  } else if (pct >= 60) {
+    grade.textContent = '👍 Khá – ' + pct + '%'; grade.className = 'grade B';
+    trophy.textContent = '🎖️'; title.textContent = 'Làm tốt lắm!';
+  } else {
+    grade.textContent = '📚 Cần ôn thêm – ' + pct + '%'; grade.className = 'grade C';
+    trophy.textContent = '📖'; title.textContent = 'Cố gắng hơn nhé!';
+  }
+}
+
+function toggleReview() {
+  rvOpen = !rvOpen;
+  const wrap = document.getElementById('rv-wrap');
+  const btn = document.getElementById('rv-toggle');
+  if (rvOpen) {
+    wrap.style.display = 'block';
+    btn.textContent = '▲ Ẩn đáp án';
+    buildReview();
+  } else {
+    wrap.style.display = 'none';
+    btn.textContent = '📋 Xem đáp án chi tiết';
+  }
+}
+
+function buildReview() {
+  const wrap = document.getElementById('rv-wrap');
+  wrap.innerHTML = '';
+  questions.forEach((q, i) => {
+    const chosen = answered[i];
+    const isRight = chosen === q.ans;
+    const div = document.createElement('div');
+    div.className = 'rv-block';
+    const icon = chosen === null ? '⬜' : isRight ? '✅' : '❌';
+    div.innerHTML = `
+      <div class="rv-q">${icon} Câu ${i+1}. ${escHtml(q.q.split('\n')[0])}</div>
+      <div class="rv-row ${isRight ? 'rv-ok' : 'rv-no'}">
+        Bạn chọn: ${chosen !== null ? LETTERS[chosen]+'. '+escHtml(q.opts[chosen]) : '(chưa trả lời)'}
+      </div>
+      <div class="rv-row rv-ans">✓ Đáp án: ${LETTERS[q.ans]}. ${escHtml(q.opts[q.ans])}</div>
+      <div class="rv-row" style="color:var(--muted);font-style:italic">💡 ${escHtml(q.ex)}</div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function restart(keepShuffle = false) {
+  cur = 0; score = 0; wrongs = 0; streak = 0; rvOpen = false;
+  if (shuffleOn) questions = shuffle([...RAW]);
+  else questions = [...RAW];
+  answered = new Array(questions.length).fill(null);
+  document.getElementById('sc-ok').textContent = '0';
+  document.getElementById('sc-no').textContent = '0';
+  document.getElementById('sc-streak').textContent = '0';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'flex';
+  render();
+}
+
+function launchConfetti() {
+  const c = document.createElement('div'); c.className = 'cf'; document.body.appendChild(c);
+  const cols = ['#58a6ff','#3fb950','#e3b341','#f85149','#bc8cff','#39d353'];
+  for (let i = 0; i < 70; i++) {
+    const p = document.createElement('div'); p.className = 'cp';
+    p.style.cssText = `left:${Math.random()*100}%;background:${cols[Math.floor(Math.random()*cols.length)]};width:${5+Math.random()*7}px;height:${5+Math.random()*7}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*.5}s;`;
+    c.appendChild(p);
+  }
+  setTimeout(() => c.remove(), 4000);
+}
+
+render();
+</script>
+</body>
+</html>
